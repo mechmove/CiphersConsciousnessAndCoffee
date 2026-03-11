@@ -19,7 +19,7 @@ The project contains:
 
 	Required reading:
 
-	https://github.com/mechmove/mechmove.github.io/discussions/38
+	https://github.com/mechmove/mechmove.github.io/discussions/38<br>
 	https://github.com/mechmove/mechmove.github.io/discussions/39
 
 	Refer to comments about how each program is to be run
