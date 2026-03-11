@@ -18,10 +18,10 @@ The project contains:
 - Instructions for reproducing the results:
 
 	Required reading:
-	https://github.com/mechmove/mechmove.github.io/discussions/38
 
+	https://github.com/mechmove/mechmove.github.io/discussions/38
 	https://github.com/mechmove/mechmove.github.io/discussions/39
-	
+
 	Refer to comments about how each program is to be run
 
 Everything is self-contained. If you have basic C# experience, you can run the tests exactly as I did.
