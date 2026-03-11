@@ -686,9 +686,10 @@ public static class CollisionSearchService
 		// calulated and predestined sides with new calculated values, both sides the same
 		// no wonder it looked odd, but it worked.
 		// the question now is, does either side (which are identical) come from
-		// the near-infinite combinations of the new logic or is it a subset of the predestined orders?
-		// Hint: my testing has shown the calculated/predestined values are being sourced from near-infinite space
-		// It works despite my incompetance because of permutations allowing the perfect solution to manefest.
+		// the large space of permutations or is it a subset of the predestined orders?
+		// answer, both sides are from the large space of permutations, and the pattern is
+		// stable across all inputs, so it is a valid reflector,
+		// albeit with an unusual construction pattern.
 
 		// But first, check to see the old reflector pattern is satified for all entry points:
 
