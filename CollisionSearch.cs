@@ -493,7 +493,7 @@ public static class CollisionSearchService
 		File.WriteAllText("RotorType.txt", "PlugBoard");
 		File.WriteAllText(BasePathCompleted + "PlugBoard_PredestinedIndex_" + PredestinedIndex.ToString() + ".csv", ExtractRotorIntoCSV(b, radix));
 
-		if (ValidateMovingPlugBoardNew(b, radix))
+		if (ValidatePlugBoardNew(b, radix))
 		{
 			SharedFileWriter.WriteLineSafe("Success: PlugBoardNew for PredestinedIndex: " + PredestinedIndex.ToString() + " has been confirmed as functional!",
 				CompletedFileExtraStatus);
@@ -505,7 +505,7 @@ public static class CollisionSearchService
 		}
 
 	}
-	static bool ValidateMovingPlugBoardNew(byte[,] b, int radix)
+	static bool ValidatePlugBoardNew(byte[,] b, int radix)
 	{
 		bool Rtn = true;
 		// this is new plugboard, works with input and Calculated (side 1),
@@ -572,7 +572,7 @@ public static class CollisionSearchService
 		File.WriteAllText("RotorType.txt", "Reflector");
 		File.WriteAllText(BasePathCompleted + "Reflector_PredestinedIndex_" + PredestinedIndex.ToString() + ".csv", ExtractRotorIntoCSV(b, radix));
 
-		if (ValidateMovingReflectorNew(b, radix))
+		if (ValidateReflectorNew(b, radix))
 		{
 			SharedFileWriter.WriteLineSafe("Success: ReflectorNew for PredestinedIndex: " + PredestinedIndex.ToString() + " has been confirmed as functional!",
 				CompletedFileExtraStatus);
@@ -586,7 +586,7 @@ public static class CollisionSearchService
 
 	}
 
-	static bool ValidateMovingReflectorNew(byte[,] b, int radix)
+	static bool ValidateReflectorNew(byte[,] b, int radix)
 	{
 		bool Rtn = true;
 			// this is the new Reflector:
