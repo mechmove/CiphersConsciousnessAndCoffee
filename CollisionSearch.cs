@@ -21,6 +21,7 @@ public static class CollisionSearchService
 	// Assumes these are set appropriately elsewhere
 	public static string BasePath = string.Empty;
 	public static string BasePathCompleted = string.Empty;
+	public static string HardstopFln = string.Empty;
 
 	private static string CompletedFile = string.Empty;
 	private static string CompletedFileExtraStatus = string.Empty;
@@ -68,17 +69,24 @@ public static class CollisionSearchService
 		CompletedFile = Path.Combine(BasePathCompleted, "Completed.txt");
 		CompletedFileExtraStatus = Path.Combine(BasePathCompleted, "Completed_RotorFunctionality.txt");
 		CompletedFileUniqueHashWords= Path.Combine(BasePathCompleted, "Completed_UniqueHashStatus.txt");
+		HardstopFln = Path.Combine(BasePathCompleted, "Hardstop.txt");
+
+		if (File.Exists(HardstopFln))
+		{
+			HardStop = Convert.ToInt32(File.ReadAllText(HardstopFln));
+		}
 
 		DateTime ProcessStartTime = DateTime.Now;
 
-		Int32 ProcessCnt = 0;
+		Int32 currentProcessCnt = 0;
+		Int32 TotalProcessCnt = 0;
 		if (File.Exists(CompletedFile))
 		{
-			ProcessCnt = File.ReadAllLines(CompletedFile).Count();
-			if (ProcessCnt.Equals(HardStop))
+			TotalProcessCnt = File.ReadAllLines(CompletedFile).Count();
+			if (TotalProcessCnt >= (HardStop))
 			{
-				Console.WriteLine($"Hard stop limit of {HardStop} already reached in Completed.txt." + Environment.NewLine +  "Stopping search.");
-
+				Console.WriteLine($"Hard stop limit of {HardStop} already reached in Completed.txt." + Environment.NewLine + "Stopping search." + Environment.NewLine + Environment.NewLine);
+				SummaryOfResults(TotalProcessCnt);
 				Console.ReadKey();
 				return;
 			}
@@ -104,6 +112,7 @@ public static class CollisionSearchService
 		{
 			if (ct is { IsCancellationRequested: true })
 			{
+				SummaryOfResults(TotalProcessCnt);
 				state.Stop();
 				return;
 			}
@@ -131,19 +140,21 @@ public static class CollisionSearchService
 
 				Console.WriteLine($"Generated random Int32 target for CollisionSearch: {target}");
 				// Perform the collision search
-				ProcessCnt++;
+				currentProcessCnt++;
+				TotalProcessCnt++;
 
 				string hitsLocalPath = hitsLocalPath = GoCollision(target, checkOpts);
-				Console.WriteLine("total number checked: "+ $"{ProcessCnt}");
+				Console.WriteLine("total number checked: " + $"{TotalProcessCnt}");
 				double TimeElapsed = (DateTime.Now - ProcessStartTime).TotalSeconds;
-				Console.WriteLine("total time elapsed: " + Math.Round(TimeElapsed/60,2) + " minutes");
-				Console.WriteLine("Average items produced every " + Math.Round(TimeElapsed / ProcessCnt,2) + " seconds.");
-				Console.WriteLine($"=============================END====================================="+Environment.NewLine);
+				Console.WriteLine("total time elapsed: " + Math.Round(TimeElapsed / 60, 2) + " minutes");
+				Console.WriteLine("Average items produced every " + Math.Round(TimeElapsed / currentProcessCnt, 2) + " seconds.");
+				Console.WriteLine($"=============================END=====================================" + Environment.NewLine);
 				// Mark completion (use shared-safe writer for cross-process safety)
 				var resultLine = BuildCompletionStatusLine(target, hitsLocalPath);
 				SharedFileWriter.WriteLineSafe(resultLine, CompletedFile);
-				if (ProcessCnt.Equals(HardStop))
+				if (TotalProcessCnt.Equals(HardStop))
 				{
+					SummaryOfResults(TotalProcessCnt);
 					Console.WriteLine($"Hard stop limit of {HardStop} reached. Stopping search.");
 					Console.ReadKey();
 					return;
@@ -159,12 +170,22 @@ public static class CollisionSearchService
 				SafeDelete(pendingPath);
 			}
 		});
-		var lines = File.ReadAllLines(CompletedFile);
-		Console.WriteLine("Number of Not Found items: " + lines.Count(l => l.EndsWith(", Not Found!", StringComparison.Ordinal)));
-		Console.WriteLine("CollisionSearch finished or stopped.");
-
 	}
 
+	private static void SummaryOfResults(Int32 TotalProcessCnt)
+	{
+		Console.WriteLine("Summary of Results: " + Environment.NewLine);
+		Console.WriteLine("total rotors number checked: " + $"{TotalProcessCnt}");
+		var lines = File.ReadAllLines(CompletedFile);
+		Console.WriteLine("calculated rotors outside of 2^31: " + lines.Count(l => l.EndsWith(", Not Found!", StringComparison.Ordinal)));
+		lines = File.ReadAllLines(CompletedFileExtraStatus);
+		Console.WriteLine("Number of rotors verified as being operational: " + lines.Count(l => l.EndsWith(" has been confirmed as functional!", StringComparison.Ordinal)));
+		lines = File.ReadAllLines(CompletedFileUniqueHashWords);
+		Console.WriteLine("Number of duplicate hashes: " + lines.Count(l => l.EndsWith(" DUPLICATE!", StringComparison.Ordinal)));
+
+		Console.WriteLine(Environment.NewLine + "CollisionSearch finished or stopped.");
+
+	}
 	// Atomic claim: only one thread/process can create this file
 	private static bool TryClaimPending(string pendingPath)
 	{
