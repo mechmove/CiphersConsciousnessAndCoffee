@@ -5,15 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Runtime.CompilerServices;
-using Hashing;
 using System.Security.Claims;
 using System.Net.NetworkInformation;
 using System.Threading;
 
-	class Program
+class Program
+{
+	static void Main(string[] args)
 	{
-		static void Main(string[] args)
-		{
 		var cts = new CancellationTokenSource();
 		var token = cts.Token;
 
@@ -31,11 +30,7 @@ using System.Threading;
 
 		try
 		{
-			//CollisionSearchService.CollisionSearch(checkOpts: CollisionSearchService.CheckOpts.chkPredestined, token);
-			//CollisionSearchService.CollisionSearch(checkOpts: CollisionSearchService.CheckOpts.chkMovingCipher, token);
-			//CollisionSearchService.CollisionSearch(checkOpts: CollisionSearchService.CheckOpts.chkPlugBoardNew, token);
-			//CollisionSearchService.CollisionSearch(checkOpts: CollisionSearchService.CheckOpts.chkReflectorNew, token);
-			CollisionSearchService.CollisionSearch(checkOpts: CollisionSearchService.CheckOpts.chkReflectorOri, token);
+			CollisionSearchService.CollisionSearch(token);
 		}
 		catch (OperationCanceledException)
 		{
@@ -45,6 +40,6 @@ using System.Threading;
 		Console.Write("All tests are completed, check your results and press any key to close this box" + Environment.NewLine);
 		Console.ReadKey();
 	}
-	
+
 }
 

@@ -1,0 +1,2 @@
+2147483647;MaxSearchRange;override the full predestined range from 0 to 2147483647 for MS' System.Random.
+chkReflectorOri;RotorOptions;choose CollisionSearchService.CheckOpts [chkPredestined, chkMovingCipher, chkPlugBoardNew, chkReflectorNew, chkReflectorOri]

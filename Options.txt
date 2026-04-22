@@ -1,0 +1,6 @@
+100000;HardStop;stop process after this many predestined options are checked
+No;HitsYesNo;do you want the HitsFile? example: Hits_56477970.txt. Leave this at No for large batches. Any duplication (unlikely) will still be reported.
+No;RotorDetailYesNo;do you want the rotor detail?
+500;ETA_MsgEvery;calculate ETA every X cycles
+1;ETA_PauseMilliSeconds;pause for X milliseconds to view msg. If ETA_MsgEvery is very small, set this to a very large value.
+Yes;ETABeep;do you want audible beep when ETA is reported?
